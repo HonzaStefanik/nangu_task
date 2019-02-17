@@ -1,0 +1,45 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-2.5.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+
+    <bean id="abstractDao" class="domain.dao.AbstractDao" abstract="true"/>
+
+    <bean id="authorDao" class="domain.dao.AuthorDao"/>
+    <bean id="messageDao" class="domain.dao.MessageDao"/>
+
+    <bean id="authorDaoService" class="domain.dao.AuthorDaoService" parent="abstractDao">
+        <property name="dao" ref="authorDao"/>
+    </bean>
+
+    <bean id="messageDaoService" class="domain.dao.MessageDaoService" parent="abstractDao">
+        <property name="dao" ref="messageDao"/>
+    </bean>
+
+
+    <bean id="authorService" class="service.AuthorServiceImpl"/>
+
+    <bean id="messageService" class="service.MessageServiceImpl"/>
+
+    <bean id="authorRestController" class="controller.AuthorController">
+        <property name="authorService" ref="authorService"/>
+    </bean>
+
+    <bean id="messageRestController" class="controller.MessageController">
+        <property name="messageService" ref="messageService"/>
+        <property name="authorService" ref="authorService"/>
+    </bean>
+
+    <bean id="messageListener" class="messaging.MessageListener"/>
+
+
+   <!--<mvc:interceptors>
+       <bean id="authenticationInterceptor" class="api.security.AuthenticationInterceptor">
+           <property name="authorDaoService" ref="authorDaoService"/>
+       </bean>
+   </mvc:interceptors>-->
+
+</beans>
